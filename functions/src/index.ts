@@ -49,10 +49,6 @@ exports.makeUppercase = functions.firestore
 // Will the controls lives within vendor or a related field?
 
 exports.addVendor = functions.https.onRequest(async (req, res) => {
-  // perform schema validation
-  // check if the body is correct
-
-  // write to the actual firestore
   const vendor = req.body.vendor;
   console.log("vendor:", vendor);
   res.json({result: `Message with ID: ${vendor} added.`});
