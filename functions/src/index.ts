@@ -48,8 +48,10 @@ exports.makeUppercase = functions.firestore
 // Check if the control vendor is already existing
 // Will the controls lives within vendor or a related field?
 
-exports.addVendor = functions.https.onRequest(async (req, res) => {
-  const vendor = req.body.vendor;
-  console.log("vendor:", vendor);
-  res.json({result: `Message with ID: ${vendor} added.`});
+exports.addApartment = functions.https.onRequest(async (req, res) => {
+  const apartment = req.body.apartment;
+
+  // add the apartment details to firestore
+
+  res.json({result: `Message with ID: ${apartment} added.`});
 });
