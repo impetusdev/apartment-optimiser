@@ -10,20 +10,6 @@ admin.initializeApp();
 //   response.send("Hello from Firebase!");
 // });
 
-// Take the text parameter passed to this HTTP endpoint and insert it into
-// Firestore under the path /messages/:documentId/original
-exports.addMessage = functions.https.onRequest(async (req, res) => {
-  // Grab the text parameter.
-  const original = req.query.text;
-  // Push the new message into Firestore using the Firebase Admin SDK.
-  const writeResult = await admin
-    .firestore()
-    .collection("messages")
-    .add({original: original});
-  // Send back a message that we've successfully written the message
-  res.json({result: `Message with ID: ${writeResult.id} added.`});
-});
-
 // Listens for new messages added to /messages/:documentId/original and creates
 // an uppercase version of the message to /messages/:documentId/uppercase
 exports.makeUppercase = functions.firestore
@@ -44,14 +30,20 @@ exports.makeUppercase = functions.firestore
     return snap.ref.set({uppercase}, {merge: true});
   });
 
-// Make simple form that you can add control values to.
-// Check if the control vendor is already existing
-// Will the controls lives within vendor or a related field?
-
+// add apartment to firestore.
 exports.addApartment = functions.https.onRequest(async (req, res) => {
   const apartment = req.body.apartment;
 
-  // add the apartment details to firestore
+  //TODO: add a filter to check if this apartment exists.
 
-  res.json({result: `Message with ID: ${apartment} added.`});
+  const resDocument = await admin
+    .firestore()
+    .collection("apartment")
+    .add({...apartment});
+
+  res.json({result: `Message with ID: ${resDocument.id} added.`});
 });
+
+exports;
+
+// do we need to trigger any repository second effects?
