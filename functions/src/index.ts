@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
+const APARTMENT_COLLECTION = "apartment";
+
 admin.initializeApp();
 // // Start writing functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -38,11 +40,15 @@ exports.addApartment = functions.https.onRequest(async (req, res) => {
 
   const resDocument = await admin
     .firestore()
-    .collection("apartment")
+    .collection(APARTMENT_COLLECTION)
     .add({...apartment});
 
-  res.json({result: `Message with ID: ${resDocument.id} added.`});
+  res.status(201).json({result: `Message with ID: ${resDocument.id} added.`});
 });
+
+// const isExistingDoc = (address: string): boolean => {
+//   return true;
+// };
 
 exports;
 
