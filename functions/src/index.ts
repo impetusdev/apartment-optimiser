@@ -36,19 +36,27 @@ exports.makeUppercase = functions.firestore
 exports.addApartment = functions.https.onRequest(async (req, res) => {
   const apartment = req.body.apartment;
 
-  //TODO: add a filter to check if this apartment exists.
+  if (await isExistingDoc(apartment.address)) {
+    res.status(400).json({error: "This is an existing address"});
+  } else {
+    const resDocument = await admin
+      .firestore()
+      .collection(APARTMENT_COLLECTION)
+      .add({...apartment});
 
-  const resDocument = await admin
-    .firestore()
-    .collection(APARTMENT_COLLECTION)
-    .add({...apartment});
-
-  res.status(201).json({result: `Message with ID: ${resDocument.id} added.`});
+    res.status(201).json({result: `Message with ID: ${resDocument.id} added.`});
+  }
 });
 
-// const isExistingDoc = (address: string): boolean => {
-//   return true;
-// };
+const isExistingDoc = async (address: string): Promise<boolean> => {
+  const docSnapshot = await admin
+    .firestore()
+    .collection(APARTMENT_COLLECTION)
+    .where("address", "==", address)
+    .get();
+
+  return docSnapshot.docs.length > 0;
+};
 
 exports;
 
