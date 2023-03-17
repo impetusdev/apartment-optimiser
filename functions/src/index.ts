@@ -1,7 +1,13 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-const APARTMENT_COLLECTION = "apartment";
+const APARTMENT_COLLECTION = "apartments";
+
+type Apartment = {
+  id: string;
+  address: string;
+  price: number;
+};
 
 admin.initializeApp();
 // // Start writing functions
@@ -44,7 +50,21 @@ exports.addApartment = functions.https.onRequest(async (req, res) => {
 });
 
 // get all apartments listed:
-exports.getApartments = functions.https.onRequest(async (req, res) => {});
+exports.getApartments = functions.https.onRequest(async (req, res) => {
+  const apartmentSnapshot = await admin
+    .firestore()
+    .collection(APARTMENT_COLLECTION)
+    .get();
+
+  const apartments: Apartment[] = [];
+  apartmentSnapshot.forEach((doc) => {
+    const data = doc.data() as Apartment;
+    apartments.push(data);
+  });
+
+  // console.log("apartments:", apartments);
+  res.send({result: {apartments}});
+});
 
 const isExistingDoc = async (address: string): Promise<boolean> => {
   const docSnapshot = await admin
