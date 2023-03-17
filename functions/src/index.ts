@@ -49,6 +49,15 @@ exports.addApartment = functions.https.onRequest(async (req, res) => {
   }
 });
 
+const isExistingDoc = async (address: string): Promise<boolean> => {
+  const docSnapshot = await admin
+    .firestore()
+    .collection(APARTMENT_COLLECTION)
+    .where("address", "==", address)
+    .get();
+
+  return docSnapshot.docs.length > 0;
+};
 // get all apartments listed:
 exports.getApartments = functions.https.onRequest(async (req, res) => {
   const apartmentSnapshot = await admin
@@ -66,16 +75,10 @@ exports.getApartments = functions.https.onRequest(async (req, res) => {
   res.send({result: {apartments}});
 });
 
-const isExistingDoc = async (address: string): Promise<boolean> => {
-  const docSnapshot = await admin
-    .firestore()
-    .collection(APARTMENT_COLLECTION)
-    .where("address", "==", address)
-    .get();
+exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
+  const url = req.body.url;
 
-  return docSnapshot.docs.length > 0;
-};
+  res.send({result: url});
+});
 
 exports;
-
-// do we need to trigger any repository second effects?
