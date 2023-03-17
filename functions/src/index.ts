@@ -6,11 +6,6 @@ const APARTMENT_COLLECTION = "apartment";
 admin.initializeApp();
 // // Start writing functions
 // // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
 
 // Listens for new messages added to /messages/:documentId/original and creates
 // an uppercase version of the message to /messages/:documentId/uppercase
@@ -47,6 +42,9 @@ exports.addApartment = functions.https.onRequest(async (req, res) => {
     res.status(201).json({result: `Message with ID: ${resDocument.id} added.`});
   }
 });
+
+// get all apartments listed:
+exports.getApartments = functions.https.onRequest(async (req, res) => {});
 
 const isExistingDoc = async (address: string): Promise<boolean> => {
   const docSnapshot = await admin
