@@ -8,9 +8,10 @@ const headers = {
 };
 
 export async function scrapeWebsite(url: string): Promise<Apartment[]> {
+  console.log(`Performing webscrapping 🌾 on ${url}`);
+
   try {
     const scraperApiUrl = `http://api.scraperapi.com/?api_key=${process.env.SCRAPER_API}&url=${url}&keep_headers=true&render=true`;
-
     const response = await axios.get(scraperApiUrl, {headers});
 
     // Load the response data into Cheerio
