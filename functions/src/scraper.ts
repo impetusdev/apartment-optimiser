@@ -18,11 +18,11 @@ export async function scrapeWebsite(url: string): Promise<Apartment[]> {
 
     // Scrape the title for each specific apartment
     const apartments: Apartment[] = [];
-    $('ul[data-testid="results"] li').each((index, element) => {
-      const street = $(element).find('[data-testid="address-line1"]').text();
-      const suburb = $(element).find('[data-testid="address-line2"]').text();
+    $("ul[data-testid='results'] li").each((index, element) => {
+      const street = $(element).find("[data-testid='address-line1']").text();
+      const suburb = $(element).find("[data-testid='address-line2']").text();
       const price = $(element)
-        .find('[data-testid="listing-card-price"]')
+        .find("[data-testid='listing-card-price']")
         .text();
       console.log("street:", street);
       console.log("suburb:", suburb);
