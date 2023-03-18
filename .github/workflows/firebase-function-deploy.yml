@@ -1,3 +1,8 @@
+name: Deploy Firebase Cloud Function
+"on":
+  push:
+    branches:
+      - main
 jobs:
   job_id:
     runs-on: "ubuntu-latest"
