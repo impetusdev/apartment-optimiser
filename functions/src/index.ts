@@ -78,11 +78,14 @@ exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
 
   // make a request to the url get the data:
   try {
-    await scrapeWebsite(url);
+    const apartments = await scrapeWebsite(url);
+
+    //TODO: add these apartments to the DB
+
+    res.send({result: {url, apartments}});
   } catch (error) {
-    console.log("ERROR:", error);
+    throw error;
   }
-  res.send({result: url});
 });
 
 exports;
