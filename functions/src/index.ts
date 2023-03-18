@@ -1,18 +1,16 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import {scrapeWebsite} from "./scraper";
 
 const APARTMENT_COLLECTION = "apartments";
 
-type Apartment = {
-  id: string;
+export type Apartment = {
+  id?: string;
   address: string;
   price: number;
 };
 
 admin.initializeApp();
-// // Start writing functions
-// // https://firebase.google.com/docs/functions/typescript
-
 // Listens for new messages added to /messages/:documentId/original and creates
 // an uppercase version of the message to /messages/:documentId/uppercase
 exports.makeUppercase = functions.firestore
@@ -78,6 +76,12 @@ exports.getApartments = functions.https.onRequest(async (req, res) => {
 exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
   const url = req.body.url;
 
+  // make a request to the url get the data:
+  try {
+    await scrapeWebsite(url);
+  } catch (error) {
+    console.log("ERROR:", error);
+  }
   res.send({result: url});
 });
 
