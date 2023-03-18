@@ -79,9 +79,17 @@ exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
   // make a request to the url get the data:
   try {
     const apartments = await scrapeWebsite(url);
-
     //TODO: add these apartments to the DB
+    const db = admin.firestore();
+    const batch = db.batch();
 
+    apartments.forEach((apartment) => {
+      const apartmentRef = db.collection(APARTMENT_COLLECTION).doc();
+      batch.set(apartmentRef, apartment);
+    });
+
+    await batch.commit();
+    console.log("Batch committed successfully! 🐲");
     res.send({result: {url, apartments}});
   } catch (error) {
     throw error;
