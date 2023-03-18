@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {scrapeWebsite} from "./scraper";
+import {scrapeWebsite} from "./scraperService";
 
 const APARTMENT_COLLECTION = "apartments";
 
@@ -33,7 +33,7 @@ exports.makeUppercase = functions.firestore
 
 // add apartment to firestore.
 exports.addApartment = functions.https.onRequest(async (req, res) => {
-  const apartment = req.body.apartment;
+  const apartment: Apartment = req.body.apartment;
 
   if (await isExistingDoc(apartment.address)) {
     res.status(400).json({error: "This is an existing address"});
@@ -75,21 +75,45 @@ exports.getApartments = functions.https.onRequest(async (req, res) => {
 
 exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
   const url = req.body.url;
-
-  // make a request to the url get the data:
   const apartments = await scrapeWebsite(url);
-  // TODO: add these apartments to the DB
+
+  // Given apartments, check if the address exists in the apartments collection
+  const apartmentAddresses = await getApartmentAddresses();
+  // remove existing addresses
+  const newApartments = apartments.filter((apartment: Apartment) => {
+    return !apartmentAddresses.has(apartment.address);
+  });
+
+  console.log(
+    `Found ${apartments.length - newApartments.length} existing apartments`
+  );
+
   const db = admin.firestore();
   const batch = db.batch();
 
-  apartments.forEach((apartment) => {
+  newApartments.forEach((apartment: Apartment) => {
     const apartmentRef = db.collection(APARTMENT_COLLECTION).doc();
     batch.set(apartmentRef, apartment);
   });
 
   await batch.commit();
   console.log("Batch committed successfully! 🐲");
-  res.send({result: {url, apartments}});
+  res.send({result: {url, newApartments}});
 });
+
+const getApartmentAddresses = async () => {
+  console.log("Getting existing apartment addresses 🏡");
+  const snapshot = await admin
+    .firestore()
+    .collection(APARTMENT_COLLECTION)
+    .get();
+
+  const aparmentAddresses = new Set<string>();
+  snapshot.docs.forEach((apartment) => {
+    aparmentAddresses.add(apartment.data().address);
+  });
+
+  return aparmentAddresses;
+};
 
 exports;
