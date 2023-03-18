@@ -1,6 +1,8 @@
 import axios from "axios";
 import {load} from "cheerio";
 import {Apartment} from ".";
+import * as admin from "firebase-admin";
+import {APARTMENT_COLLECTION} from "./utils";
 
 const headers = {
   "User-Agent":
@@ -40,6 +42,36 @@ export async function scrapeWebsite(url: string): Promise<Apartment[]> {
     throw error;
   }
 }
+
+export const getApartmentAddresses = async () => {
+  console.log("Getting existing apartment addresses 🏡");
+  const snapshot = await admin
+    .firestore()
+    .collection(APARTMENT_COLLECTION)
+    .get();
+
+  const aparmentAddresses = new Set<string>();
+  snapshot.docs.forEach((apartment) => {
+    aparmentAddresses.add(apartment.data().address);
+  });
+
+  return aparmentAddresses;
+};
+
+export const writeMultipleApartments = async (
+  apartments: Apartment[]
+): Promise<void> => {
+  const db = admin.firestore();
+  const batch = db.batch();
+
+  apartments.forEach((apartment: Apartment) => {
+    const apartmentRef = db.collection(APARTMENT_COLLECTION).doc();
+    batch.set(apartmentRef, apartment);
+  });
+
+  await batch.commit();
+  console.log("Batch committed successfully! 🐲");
+};
 
 const parsePrice = (price: string): number => {
   return parseInt(price.split(" ")[0].slice(1));

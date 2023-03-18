@@ -1,8 +1,11 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {scrapeWebsite} from "./scraperService";
-
-const APARTMENT_COLLECTION = "apartments";
+import {
+  getApartmentAddresses,
+  scrapeWebsite,
+  writeMultipleApartments,
+} from "./scraperService";
+import {APARTMENT_COLLECTION} from "./utils";
 
 export type Apartment = {
   id?: string;
@@ -35,7 +38,7 @@ exports.makeUppercase = functions.firestore
 exports.addApartment = functions.https.onRequest(async (req, res) => {
   const apartment: Apartment = req.body.apartment;
 
-  if (await isExistingDoc(apartment.address)) {
+  if (await isExistingAddress(apartment.address)) {
     res.status(400).json({error: "This is an existing address"});
   } else {
     const resDocument = await admin
@@ -47,7 +50,7 @@ exports.addApartment = functions.https.onRequest(async (req, res) => {
   }
 });
 
-const isExistingDoc = async (address: string): Promise<boolean> => {
+const isExistingAddress = async (address: string): Promise<boolean> => {
   const docSnapshot = await admin
     .firestore()
     .collection(APARTMENT_COLLECTION)
@@ -77,9 +80,7 @@ exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
   const url = req.body.url;
   const apartments = await scrapeWebsite(url);
 
-  // Given apartments, check if the address exists in the apartments collection
   const apartmentAddresses = await getApartmentAddresses();
-  // remove existing addresses
   const newApartments = apartments.filter((apartment: Apartment) => {
     return !apartmentAddresses.has(apartment.address);
   });
@@ -88,32 +89,9 @@ exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
     `Found ${apartments.length - newApartments.length} existing apartments`
   );
 
-  const db = admin.firestore();
-  const batch = db.batch();
+  writeMultipleApartments(newApartments);
 
-  newApartments.forEach((apartment: Apartment) => {
-    const apartmentRef = db.collection(APARTMENT_COLLECTION).doc();
-    batch.set(apartmentRef, apartment);
-  });
-
-  await batch.commit();
-  console.log("Batch committed successfully! 🐲");
   res.send({result: {url, newApartments}});
 });
-
-const getApartmentAddresses = async () => {
-  console.log("Getting existing apartment addresses 🏡");
-  const snapshot = await admin
-    .firestore()
-    .collection(APARTMENT_COLLECTION)
-    .get();
-
-  const aparmentAddresses = new Set<string>();
-  snapshot.docs.forEach((apartment) => {
-    aparmentAddresses.add(apartment.data().address);
-  });
-
-  return aparmentAddresses;
-};
 
 exports;
