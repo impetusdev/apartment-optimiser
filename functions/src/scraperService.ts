@@ -16,7 +16,6 @@ export async function scrapeWebsite(url: string): Promise<Apartment[]> {
     const scraperApiUrl = `http://api.scraperapi.com/?api_key=${process.env.SCRAPER_API}&url=${url}&keep_headers=true&render=true`;
     const response = await axios.get(scraperApiUrl, {headers});
 
-    // Load the response data into Cheerio
     const $ = load(response.data);
 
     // Scrape the title for each specific apartment
@@ -27,9 +26,7 @@ export async function scrapeWebsite(url: string): Promise<Apartment[]> {
       const price = $(element)
         .find("[data-testid='listing-card-price']")
         .text();
-      console.log("street:", street);
-      console.log("suburb:", suburb);
-      console.log("price:", price);
+
       apartments.push({
         address: street + suburb,
         price: parsePrice(price),
