@@ -7,7 +7,7 @@ const headers = {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
 };
 
-export async function scrapeWebsite(url: string): Promise<void> {
+export async function scrapeWebsite(url: string): Promise<Apartment[]> {
   try {
     const scraperApiUrl = `http://api.scraperapi.com/?api_key=${process.env.SCRAPER_API}&url=${url}&keep_headers=true&render=true`;
 
@@ -33,9 +33,10 @@ export async function scrapeWebsite(url: string): Promise<void> {
       });
     });
 
-    console.log("apartments:", apartments);
+    return apartments;
   } catch (error) {
     console.error(`Error fetching URL: ${url}`, error);
+    throw error;
   }
 }
 
