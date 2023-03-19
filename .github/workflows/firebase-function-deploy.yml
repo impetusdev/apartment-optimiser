@@ -29,6 +29,8 @@ jobs:
           name: "scrapeApartments"
           runtime: "nodejs16"
           source_dir: "./functions"
+          https_trigger_security_level: "secure_always"
+          region: "australia-southeast1"
 
       # Example of using the output
       - id: "test"
