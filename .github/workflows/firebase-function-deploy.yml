@@ -22,7 +22,7 @@ jobs:
       - id: "deploy"
         uses: "google-github-actions/deploy-cloud-functions@v1"
         with:
-          name: "apartment-optimiser"
+          name: "scrapeApartments"
           runtime: "nodejs16"
 
       # Example of using the output
