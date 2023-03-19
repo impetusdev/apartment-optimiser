@@ -24,6 +24,7 @@ jobs:
         with:
           name: "scrapeApartments"
           runtime: "nodejs16"
+          source_dir: "./functions"
 
       # Example of using the output
       - id: "test"
