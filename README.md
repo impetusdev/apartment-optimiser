@@ -31,4 +31,4 @@ npm run build:watch
 
 You should be able to hit the endpoint `/addApartment` with your apartment details.
 
-Alternatively if you setup an account with [ScraperApi](https://www.scraperapi.com/?utm_source=google&utm_medium=cpc&utm_id=1485898465_54263081981&utm_term=scraper%20api&utm_mt=e&utm_device=d&utm_campaign=T1|s|Branded&gclid=Cj0KCQjwwtWgBhDhARIsAEMcxeBSpRtdK8ESU6ftGU_uW0X4Chb7kETE-hv8Jea0OVHxQrW4FPbKNhYaAhpXEALw_wcB), and save your api token into an .env you can run the `/scrapeApartments` endpoint
+Alternatively if you setup an account with [ScraperApi](https://www.scraperapi.com/?utm_source=google&utm_medium=cpc&utm_id=1485898465_54263081981&utm_term=scraper%20api&utm_mt=e&utm_device=d&utm_campaign=T1|s|Branded&gclid=Cj0KCQjwwtWgBhDhARIsAEMcxeBSpRtdK8ESU6ftGU_uW0X4Chb7kETE-hv8Jea0OVHxQrW4FPbKNhYaAhpXEALw_wcB), and save your api token into an .env you can hit the `/scrapeApartments` endpoint, which given an apartment domain will scrape all of the apartments on the page with their prices.
