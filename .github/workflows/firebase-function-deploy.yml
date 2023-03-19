@@ -21,7 +21,7 @@ jobs:
 
       - id: "build"
         run: "npm install && npm run build"
-        workding-directory: "./functions"
+        working-directory: "./functions"
 
       - id: "deploy"
         uses: "google-github-actions/deploy-cloud-functions@v1"
