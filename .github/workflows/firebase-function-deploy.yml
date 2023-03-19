@@ -19,7 +19,7 @@ jobs:
           workload_identity_provider: "projects/1013700101413/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
           service_account: "my-service-account@apartment-optimiser.iam.gserviceaccount.com"
           
-      -id: "auth"
+      -id: "build"
         run: "npm install && npm run build"
 
       - id: "deploy"
