@@ -77,7 +77,7 @@ exports.getApartments = functions.https.onRequest(async (req, res) => {
 });
 
 exports.scrapeApartments = functions.https.onRequest(async (req, res) => {
-  const url = req.body.url;
+  const url = req.body.url; // this should be a domain.com.au url
   const apartments = await scrapeWebsite(url);
 
   const apartmentAddresses = await getApartmentAddresses();
