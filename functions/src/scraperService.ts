@@ -18,7 +18,7 @@ export async function scrapeWebsite(url: string): Promise<Apartment[]> {
 
     const $ = load(response.data);
 
-    // Scrape the title for each specific apartment
+    // Scrape the title for each specific Apartment
     const apartments: Apartment[] = [];
     $("ul[data-testid='results'] li").each((index, element) => {
       const street = $(element).find("[data-testid='address-line1']").text();
