@@ -31,6 +31,7 @@ jobs:
           source_dir: "./functions"
           https_trigger_security_level: "secure_always"
           region: "australia-southeast1"
+          env_vars: "SCRAPER_API=${{ secrets.SCRAPER_API }}"
 
       # Example of using the output
       - id: "test"
