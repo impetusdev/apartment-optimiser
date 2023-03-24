@@ -1,0 +1,3 @@
+[submodule "functions/apartment-submodule-tester"]
+	path = functions/apartment-submodule-tester
+	url = https://github.com/impetusdev/apartment-submodule-tester
